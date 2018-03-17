@@ -1,0 +1,1 @@
+This repository collects a bunch of student projects for learning functional programming in JavaScript.
