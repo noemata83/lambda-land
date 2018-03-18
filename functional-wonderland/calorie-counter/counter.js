@@ -11,12 +11,12 @@ mealsTable
 const MEALS = [
     { description: 'Breakfast', calories: 460},
     { description: 'Snack', calories: 230 },
-    { description: 'Lunch', calories: 600 }
+    { description: 'Lunch', calories: 603 }
 ]
 
 // const HEADINGS = [ { description: 'Meal', className='pa2 tl'}, { description: 'Calories', className='pa2 tr'}];
 
-const {td, th, tr, tbody} = tags;
+const {table, thead, td, th, tr, tbody} = tags;
 
 function createCell (tag, className, data) {
     return tag({
@@ -39,16 +39,33 @@ function mealsBody(className, meals) {
 function createHeaderRow() {
     return thead({ }, [
         createCell(th, 'pa2 tl', 'Meal'),
-        createcell(th, 'pa2 tr', 'Calories')
+        createCell(th, 'pa2 tr', 'Calories')
     ]);
 }
 
-// function createTotalRow(meals) {
-//     const total = meals.reduce( ())
-//     return tr()
-// }
+calorieSum = (acc, meal) => acc + meal.calories;
+
+function createTotalRow(meals) {
+    const total = R.pipe(
+        R.map(meal => meal.calories),               // Partial application, since Ramda requires both a callback and the source of the data transformation
+        R.reduce((acc, calories) => acc + calories, 0),
+    )(meals); // partial application completed
+    return tr({}, [
+        createCell(td, 'pa2 tr', "Total:"),
+        createCell(td, 'pa2 tr', total)
+    ]);
+}
+
+function mealsTable(className, meals) {
+    return table({className}, [
+        createHeaderRow(),
+        mealsBody('', meals),
+        createTotalRow(meals)
+    ]);
+}
+
 const node = document.getElementById('app');
 
-const view = mealsBody('', MEALS);
+const view = mealsTable('mw5 center w-100 collapse', MEALS);
 
 node.appendChild(view);
