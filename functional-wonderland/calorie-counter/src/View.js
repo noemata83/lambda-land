@@ -1,6 +1,6 @@
 import hh from 'hyperscript-helpers';
 import { h } from 'virtual-dom';
-import { showFormMsg, mealInputMsg, calorieInputMsg, saveMealMsg, deleteMealMsg } from './Update';
+import { showFormMsg, mealInputMsg, calorieInputMsg, saveMealMsg, deleteMealMsg, editMealMsg } from './Update';
 
 import * as R from 'ramda';
 
@@ -64,6 +64,9 @@ function mealRow (dispatch, className, meal) {
         createCell(td, 'pa2', [ 
             i({ className: 'ph1 fa fa-trash-o pointer',
                 onclick: () => dispatch(deleteMealMsg(meal.id))
+            }),
+            i({ className: 'ph1 fa fa-pencil-square-o pointer',
+                onclick: () => dispatch(editMealMsg(meal.id))
             })
         ])
     ]);
