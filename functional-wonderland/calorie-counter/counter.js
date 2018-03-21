@@ -43,7 +43,7 @@ function createHeaderRow() {
     ]);
 }
 
-calorieSum = (acc, meal) => acc + meal.calories;
+const calorieSum = (acc, meal) => acc + meal.calories;
 
 function createTotalRow(meals) {
     const total = R.pipe(
