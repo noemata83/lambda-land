@@ -40,14 +40,14 @@ function view(dispatch, model) {
         inputSet(
             dispatch,
             true,
-            model.leftUnit,
-            model.leftValue
+            model.leftValue,
+            model.leftUnit
         ),
         inputSet(
             dispatch,
             false,
-            model.rightUnit,
-            model.rightValue
+            model.rightValue,
+            model.rightUnit
         )
     ]),
     pre(JSON.stringify(model, null, 2)),
