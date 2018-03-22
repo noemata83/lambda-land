@@ -2,6 +2,8 @@ import * as R from 'ramda';
 import hh from 'hyperscript-helpers';
 import { h } from 'virtual-dom';
 
+import { leftChanged, rightChanged, leftUnitChanged, rightUnitChanged } from './Update';
+
 const {
   div,
   h1,
@@ -20,15 +22,18 @@ function unitOptions(selectedUnit) {
         //units.map(unit => option({selected: unit === sourceUnit}, unit))
 }
 
-function inputSet(dispatch, sourceLeft, value, unit) {
+function inputSet(dispatch, value, unit, inputMsg, unitMsg) {
     return div({ className: 'w-50 ma1'}, [
         input({
             type: 'text', 
-            className: 'db w-100 mv2 pa2 input-reset ba', 
-            value}),
+            className: 'db w-100 mv2 pa2 input-reset ba',
+            value,
+            oninput: e => dispatch(inputMsg(e.target.value)),
+            }),
         select(
             {
-                className: 'db w-100 pa2 ba input-reset br1 bg-white ba b--black'
+                className: 'db w-100 pa2 ba input-reset br1 bg-white ba b--black',
+                onchange: (e) => dispatch(unitMsg(e.target.value))
             }, unitOptions(unit))
     ]);
 }
@@ -39,15 +44,17 @@ function view(dispatch, model) {
     div({className: 'flex'}, [
         inputSet(
             dispatch,
-            true,
             model.leftValue,
-            model.leftUnit
+            model.leftUnit,
+            leftChanged,
+            leftUnitChanged
         ),
         inputSet(
             dispatch,
-            false,
             model.rightValue,
-            model.rightUnit
+            model.rightUnit,
+            rightChanged,
+            rightUnitChanged
         )
     ]),
     pre(JSON.stringify(model, null, 2)),
