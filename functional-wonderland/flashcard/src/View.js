@@ -3,7 +3,7 @@ import hh from 'hyperscript-helpers';
 import { h } from 'virtual-dom';
 import { addFlashcard, questionInputMsg, answerInputMsg, updateQuestionInputMsg, 
   updateAnswerInputMsg, toggleForm, displayAnswerMsg, editFlashcardMsg, 
-  saveFlashcardMsg, deletFlashcardMsg } from './Update';
+  saveFlashcardMsg, deleteFlashcardMsg, updateFlashcardRankMsg } from './Update';
 
 const { pre, div, a, h1, textarea, form, input, label, button, i } = hh(h);
 
@@ -53,11 +53,11 @@ function formView(dispatch, model) {
   ]);
 }
 
-function answerDisplay(dispatch, revealed, id, answer) {
+function answerDisplay(dispatch, revealed, id, answer, rank) {
   if (revealed) {
     return div([
       revealAnswer(dispatch, id, answer),
-      rankingButtons(dispatch, id),
+      rankingButtons(dispatch, id, rank),
       ]);
   }
   return div(a({ className: 'f6 underline link pointer',
@@ -72,26 +72,26 @@ function revealAnswer(dispatch, id, answer) {
   ]);
 }
 
-function rankingButtons(dispatch, id) {
+function rankingButtons(dispatch, id, rank) {
   return div({className: 'absolute bottom-0 left-0 w-100 ph2' },
     div({ className: 'mv2 flex justify-between' }, [
-      button({ className: 'f4 ph3 pv2 bg-red bn white br1' }, 'Bad'),
-      button({ className: 'f4 ph3 pv2 bg-blue bn white br1' }, 'Good'),
-      button({ className: 'f4 ph3 pv2 bg-dark-green bn white br1' }, 'Great')
+      button({ className: 'f4 ph3 pv2 bg-red bn white br1', onclick: () => dispatch(updateFlashcardRankMsg(id, 0)) }, 'Bad'),
+      button({ className: 'f4 ph3 pv2 bg-blue bn white br1', onclick: () => dispatch(updateFlashcardRankMsg(id, rank+1)) }, 'Good'),
+      button({ className: 'f4 ph3 pv2 bg-dark-green bn white br1', onclick: () => dispatch(updateFlashcardRankMsg(id, rank+2)) }, 'Great')
     ])
   );
 }
 
 function deleteButton(dispatch, id) {
-  return i({ className: 'absolute top-0 right-0 fa fa-remove fa-fw black-50 pointer', onclick: () => dispatch(deletFlashcardMsg(id))});
+  return i({ className: 'absolute top-0 right-0 fa fa-remove fa-fw black-50 pointer', onclick: () => dispatch(deleteFlashcardMsg(id))});
 }
 
-function flashcardDisplay(dispatch, question, answer, id, revealed) {
+function flashcardDisplay(dispatch, question, answer, id, revealed, rank) {
   return [
     div([ div({className: 'b f6 mv1 underline'}, 'Question'),
           div({ className: 'pointer', onclick: () => dispatch(editFlashcardMsg(id)) }, question)
         ]),
-    answerDisplay(dispatch, revealed, id, answer),
+    answerDisplay(dispatch, revealed, id, answer, rank),
     deleteButton(dispatch, id)
   ]
 }
@@ -113,9 +113,13 @@ function flashcardForm(dispatch, questionInput, answerInput, id) {
   ]
 }
 
+const sortByRank = R.sortWith([
+  R.ascend(R.prop('rank'))
+]);
+
 function flashcardSet(dispatch, flashcard) {
-  const { question, answer, questionInput, answerInput, id, revealed, editing } = flashcard;
-  const display = editing ? flashcardForm(dispatch, questionInput, answerInput, id) : flashcardDisplay(dispatch, question, answer, id, revealed);
+  const { question, answer, questionInput, answerInput, id, revealed, editing, rank } = flashcard;
+  const display = editing ? flashcardForm(dispatch, questionInput, answerInput, id) : flashcardDisplay(dispatch, question, answer, id, revealed, rank);
   return div({
     className: 'w-100 pa2 bg-light-yellow shadow-1 mv2 relative pb5'
   }, display)
@@ -123,7 +127,7 @@ function flashcardSet(dispatch, flashcard) {
 
 function flashcardView(dispatch, flashcards) {
   if (flashcards.length === 0) return div({className: 'mv2 i black-50'}, 'No flashcards  to display...');
-  return flashcards.map(flashcard => div({className: 'w-third pa2'}, flashcardSet(dispatch, flashcard)));
+  return sortByRank(flashcards).map(flashcard => div({className: 'w-third pa2'}, flashcardSet(dispatch, flashcard)));
 }
 
 

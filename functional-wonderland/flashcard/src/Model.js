@@ -3,7 +3,6 @@ const initModel = {
     showForm: false,
     question: '',
     answer: '',
-    editId: null,
     nextId: 0
 };
 

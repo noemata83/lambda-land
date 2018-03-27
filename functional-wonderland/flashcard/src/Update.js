@@ -10,7 +10,8 @@ const MSGS = {
   DISPLAY_ANSWER: 'DISPLAY_ANSWER',
   UPDATE_QUESTION_INPUT: 'UPDATE_QUESTION_INPUT',
   UPDATE_ANSWER_INPUT: 'UPDATE_ANSWER_INPUT',
-  DELETE_FLASHCARD: 'DELETE_FLASHCARD'
+  DELETE_FLASHCARD: 'DELETE_FLASHCARD',
+  UPDATE_RANK: 'UPDATE_RANK',
 }
 
 export const addFlashcard = { type: MSGS.ADD_FLASHCARD };
@@ -72,6 +73,14 @@ export function deletFlashcardMsg(id) {
   return {
     type: MSGS.DELETE_FLASHCARD,
     id
+  }
+}
+
+export function updateFlashcardRankMsg(id, rank) {
+  return {
+    type: MSGS.UPDATE_RANK,
+    id,
+    rank
   }
 }
 
@@ -169,6 +178,23 @@ function update(msg, model) {
           return {
             ...flashcard,
             revealed: true
+          }
+        }
+        return flashcard;
+      }, model.flashcards);
+      return {
+        ...model,
+        flashcards
+      }
+    }
+    case(MSGS.UPDATE_RANK): {
+      const { id, rank } = msg;
+      const flashcards = R.map(flashcard => {
+        if (flashcard.id === id) {
+          return {
+            ...flashcard,
+            rank,
+            revealed: false
           }
         }
         return flashcard;
