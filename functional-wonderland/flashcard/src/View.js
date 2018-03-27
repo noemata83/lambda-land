@@ -96,18 +96,17 @@ function flashcardDisplay(dispatch, question, answer, id, revealed, rank) {
   ]
 }
 
+function flashcardField(inputLabel, oninput, input) {
+  return div([
+    div({className: 'b f6 mv1'}, inputLabel),
+    textarea({ className: 'w-100 bg-washed-yellow outline-0', oninput }, input)
+  ]);
+}
+
 function flashcardForm(dispatch, questionInput, answerInput, id) {
   return [
-    div([
-      div({className: 'b f6 mv1' }, 'Question'),
-      textarea({ className: 'w-100 bg-washed-yellow outline-0',
-        oninput: (e) => dispatch(updateQuestionInputMsg(id, e.target.value)) }, questionInput)
-    ]),
-    div([
-      div({ className: "b f6 mv1" }, 'Answer'),
-      textarea({ className: 'w-100 bg-washed-yellow outline-0',
-              oninput: (e) => dispatch(updateAnswerInputMsg(id, e.target.value)) }, answerInput)
-    ]),
+    flashcardField('Question', (e)=> dispatch(updateQuestionInputMsg(id, e.target.value)), questionInput),
+    flashcardField('Answer', (e) => dispatch(updateAnswerInputMsg(id, e.target.value)), answerInput),
     button({ className: 'f4 ph3 pv2 br1 bg-gray bn white mv2', onclick: () => dispatch(saveFlashcardMsg(id)) }, 'Save'),
     deleteButton(dispatch, id)
   ]
