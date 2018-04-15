@@ -1,9 +1,9 @@
 import * as R from 'ramda';
 import hh from 'hyperscript-helpers';
 import { h } from 'virtual-dom';
-import { updateCityMsg, addCity } from './Update';
+import { updateCityMsg, addCity, deleteCityMsg } from './Update';
 
-const { div, h1, form, pre, input, button, label, ul, li } = hh(h);
+const { div, h1, form, pre, input, button, label, ul, li, i } = hh(h);
 
 function inputset(dispatch, value, inputLabel, inputMsg) {
     return div({}, form({}, [
@@ -24,6 +24,17 @@ function inputset(dispatch, value, inputLabel, inputMsg) {
     ]));
 }
 
+function dataSet(outputLabel, data) {
+    return div({
+        className: 'w10 tc'
+        }, [
+            div({
+                className: 'f7 b'
+            }, outputLabel),
+            div(data)
+        ])
+}
+
 function citySet(dispatch, name, editId) {
     return li({
         className: 'pa3 bb b--light-silver flex justify-between relative'
@@ -35,7 +46,12 @@ function citySet(dispatch, name, editId) {
                 className: 'f7 b'
             }, 'Location'),
             div(name)
-        ])
+        ]),
+        dataSet('Temp', '??'),
+        dataSet('High', '??'),
+        dataSet('Low', '??'),
+        i({ className: 'relative top--1 right--1 mt1 mr1 fa fa-remove pointer black-40',
+            onclick: () => dispatch(deleteCityMsg(editId)) })
     ])
 }
 
