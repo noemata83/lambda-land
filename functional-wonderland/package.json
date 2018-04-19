@@ -9,10 +9,10 @@
   "author": "Tucker McKinney",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "expect": "^23.0.0-alpha.0",
     "hyperscript": "^2.0.2",
     "hyperscript-helpers": "^3.0.3",
     "ramda": "^0.25.0"
   }
 }
-

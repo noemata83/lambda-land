@@ -25,17 +25,19 @@ function inputset(dispatch, value, inputLabel, inputMsg) {
 }
 
 function dataSet(outputLabel, data) {
+    console.log(outputLabel, data);
     return div({
         className: 'w10 tc'
         }, [
             div({
                 className: 'f7 b'
             }, outputLabel),
-            div(data)
+            div({}, data)
         ])
 }
 
-function citySet(dispatch, name, editId) {
+function citySet(dispatch, city) {
+    const { name, editId, temp, high, low } = city;
     return li({
         className: 'pa3 bb b--light-silver flex justify-between relative'
     }, [
@@ -47,9 +49,9 @@ function citySet(dispatch, name, editId) {
             }, 'Location'),
             div(name)
         ]),
-        dataSet('Temp', '??'),
-        dataSet('High', '??'),
-        dataSet('Low', '??'),
+        dataSet('Temp', temp),
+        dataSet('High', high),
+        dataSet('Low', low),
         i({ className: 'relative top--1 right--1 mt1 mr1 fa fa-remove pointer black-40',
             onclick: () => dispatch(deleteCityMsg(editId)) })
     ])
@@ -59,7 +61,7 @@ function cityView(dispatch, cities) {
     if (cities.length === 0) return div();
     return ul({
         className: 'list pl0 ml0 ba b--light-silver br',
-    }, cities.map(city => citySet(dispatch, city.name, city.editId)));
+    }, cities.map(city => citySet(dispatch, city)));
 }
 
 function view(dispatch, model) {
